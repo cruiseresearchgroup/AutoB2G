@@ -1,7 +1,7 @@
 # AutoB2G
 
 
-AutoB2G is a building-grid co-simulation framework that integrates building-level energy control ([CityLearn V2](https://www.tandfonline.com/doi/full/10.1080/19401493.2024.2418813)) with power system analysis (Pandapower), and leverages the large language model-based [SOCIA](https://arxiv.org/abs/2505.12006) framework to enable natural language-driven simulation automation. It supports coordinated evaluation of demand response strategies and their impact on distribution grid performance.
+AutoB2G is a building-grid co-simulation framework that integrates building-level energy control ([CityLearn V2](https://www.tandfonline.com/doi/full/10.1080/19401493.2024.2418813)) with power system analysis, and leverages the large language model-based [SOCIA](https://arxiv.org/abs/2505.12006) framework to enable natural language-driven simulation automation. It supports coordinated evaluation of demand response strategies and their impact on distribution grid performance.
 
 <p align="center">
   <img src="fig/overview.png" width="1200">
@@ -15,7 +15,7 @@ AutoB2G is a building-grid co-simulation framework that integrates building-leve
 This project integrates:
 
 - 🏢 **CityLearn** – Building-level energy simulation and control
-- ⚡ **Pandapower** – Distribution grid power flow simulation
+- ⚡ **Pandapower & OpenDSS** – Distribution grid power flow simulation
 - 🤖 **Reinforcement Learning** – Data-driven control strategies
 - 📈 **Grid Performance Optimization** – Voltage regulation
 - 🔎 **Power System Analysis** – Grid robustness evaluation
@@ -58,13 +58,7 @@ Inside `run.py`, provide a natural language instruction describing the experimen
 For example:
 
 ```
-Test the centralized building control policies from both the building-side and grid-side perspectives. 
-Use the SAC model trained for 10 episodes, with a quadratic reward that minimizes voltage deviations.  
-Test the resulting strategy on an IEEE 33-bus distribution network with 24 buildings connected at each node. 
-Add a reactive power shunt element at bus 14 that injects -1.2 MVAr.  
-Compute the grid-side metrics, including bus voltage magnitudes, line loadings, 
-and an N-1 contingency analysis using a voltage tolerance of 0.05 p.u. and a line loading threshold of 70%.  
-Output the results as both plots and CSV files.
+Run a 25-building co-simulation using the default building-grid mapping. Identify the nodes with the highest voltage sensitivity, redistribute the buildings to reduce voltage violations, rerun the simulation, and compare the grid KPIs before and after redistribution. Save all allocation configurations, voltage statistics, and comparison plots.
 ```
 
 The SOCIA framework will:
@@ -94,9 +88,8 @@ The framework generates outputs based on user-defined instructions. Depending on
 
 - Bus voltage magnitude time-series  
 - Line loading time-series
-- Building control performance metrics  
-- Voltage regulation performance metrics  
-- N-1 contingency analysis results  
+- Building metrics  
+- Grid metrics
 
 Results are automatically saved to:
 
