@@ -2,6 +2,7 @@ import json
 import ast
 from typing import List, Dict
 from pathlib import Path
+from agents.base_agent import BaseAgent
 from .prompt_generation import (
     load_codebase,
     pipeline_selection
@@ -9,6 +10,7 @@ from .prompt_generation import (
 
 BASE_DIR = Path(__file__).resolve().parent
 SOURCE_FILE = BASE_DIR / "codebase.py"
+DEFAULT_REGISTRY_FILE = BASE_DIR / "codebase.json"
 
 def load_source_text(path=SOURCE_FILE):
     with open(path, "r", encoding="utf-8") as f:
@@ -23,12 +25,12 @@ def extract_function_source(fn_name: str, source_text: str) -> str:
     lines = source_text.splitlines()
 
     for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name == fn_name:
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == fn_name:
             start = node.lineno - 1
             end = node.end_lineno
             return "\n".join(lines[start:end])
 
-    raise RuntimeError(f"Function {fn_name} not found in codebase.py")
+    raise RuntimeError(f"Function or class {fn_name} not found in codebase.py")
 
 
 # ==========================================
@@ -129,35 +131,37 @@ def workflow_generation(
     # 7) compose final runnable script
     header = """
 import os
+import json
 import numpy as np
 import pandas as pd
 import pandapower as pp
 import pandapower.networks as pn
+import pandapower.shortcircuit as sc
+import opendssdirect as dss
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import copy
-
 import sys
 from pathlib import Path
+
 root = Path(__file__).resolve().parent
 while not (root / "citylearn").exists():
     root = root.parent
 sys.path.insert(0, str(root))
 from citylearn.citylearn import CityLearnEnv
 from citylearn.agents.rbc import BasicRBC as Agent_RBC
-from citylearn.agents.sac import SAC as Agent_SAC
-from citylearn.agents.base import Agent as Agent_Baseline
+from citylearn.agents.base import BaselineAgent as Agent_Baseline
 from citylearn.reward_function import RewardFunction
-from citylearn.reward_function import VoltageReward
+from citylearn.wrappers import StableBaselines3Wrapper
 
 PROJECT_ROOT = os.environ.get("PROJECT_ROOT")
 if PROJECT_ROOT is None:
-    PROJECT_ROOT = "."
+    PROJECT_ROOT = str(root)
 DATA_PATH = os.environ.get("DATA_PATH")
 if DATA_PATH is None:
-    DATA_PATH = "data_grid"
-DATA_DIR = os.path.join(PROJECT_ROOT, DATA_PATH)
+    DATA_PATH = "results"
+DATA_DIR = str((Path(PROJECT_ROOT) / DATA_PATH).resolve())
 os.makedirs(DATA_DIR, exist_ok=True)
 
 picture_path_voltages = os.path.join(DATA_DIR, "voltages.png")
@@ -180,6 +184,42 @@ if __name__ == "__main__":
     script = header + body + footer
 
     return script
+
+
+class CodebaseRetrievalAgent(BaseAgent):
+    """
+    Retrieves the workflow functions needed for CityLearn-grid generation.
+    """
+
+    def _load_prompt_template(self) -> str:
+        return ""
+
+    def process(
+        self,
+        user_goal: str,
+        path=None,
+        max_attempts=3
+    ):
+        self.logger.info("Retrieving codebase workflow")
+
+        registry_path = Path(path) if path else Path(self.config.get("codebase_path", DEFAULT_REGISTRY_FILE))
+        code = workflow_generation(
+            user_goal=user_goal,
+            path=registry_path,
+            max_attempts=max_attempts
+        )
+
+        result = {
+            "code": code,
+            "metadata": {
+                "registry_path": str(registry_path),
+                "source_file": str(SOURCE_FILE),
+                "max_attempts": max_attempts,
+                "mode": "codebase_retrieval"
+            }
+        }
+        self.logger.info("Codebase workflow retrieval completed")
+        return result
 
 
 

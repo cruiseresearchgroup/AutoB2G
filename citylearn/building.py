@@ -4,8 +4,9 @@ from gymnasium import spaces
 import numpy as np
 import pandas as pd
 import torch
+from citylearn import agents
 from citylearn.base import Environment, EpisodeTracker
-from citylearn.data import CarbonIntensity, EnergySimulation, Pricing, TOLERANCE, Weather, ZERO_DIVISION_PLACEHOLDER
+from citylearn.data import CarbonIntensity, EnergySimulation, Pricing, TOLERANCE, Weather, ZERO_DIVISION_PLACEHOLDER, DistrictLoadToTrack
 from citylearn.dynamics import Dynamics, LSTMDynamics
 from citylearn.electric_vehicle_charger import Charger
 from citylearn.energy_model import Battery, ElectricDevice, ElectricHeater, HeatPump, PV, StorageTank
@@ -36,6 +37,8 @@ class Building(Environment):
         Carbon dioxide emission rate time series.
     pricing : Pricing, optional
         Energy pricing and forecasts time series.
+    district_load_to_track : DistrictLoadToTrack, optional
+        District load tracking object.
     dhw_storage : StorageTank, optional
         Hot water storage object for domestic hot water.
     cooling_storage : StorageTank, optional
@@ -83,6 +86,7 @@ class Building(Environment):
         self, energy_simulation: EnergySimulation, weather: Weather, observation_metadata: Mapping[str, bool],
         action_metadata: Mapping[str, bool], episode_tracker: EpisodeTracker,
         carbon_intensity: CarbonIntensity = None,
+        district_load_target: DistrictLoadToTrack = None,
         pricing: Pricing = None, dhw_storage: StorageTank = None, cooling_storage: StorageTank = None,
         heating_storage: StorageTank = None, electrical_storage: Battery = None,
         dhw_device: Union[HeatPump, ElectricHeater] = None, cooling_device: HeatPump = None,
@@ -113,6 +117,8 @@ class Building(Environment):
         self.weather = weather
         self.carbon_intensity = carbon_intensity
         self.pricing = pricing
+        # assign via alias to support legacy access in other parts of the code
+        self.district_load_target = district_load_target
         self.observation_metadata = observation_metadata
         self.action_metadata = action_metadata
         self.observation_space_limit_delta = observation_space_limit_delta
@@ -160,6 +166,12 @@ class Building(Environment):
         """Energy pricing and forecasts time series."""
 
         return self.__pricing
+    
+    @property
+    def district_load_target(self) -> DistrictLoadToTrack:
+        """District load tracking object."""
+
+        return self.__district_load_target
 
     @property
     def dhw_storage(self) -> StorageTank:
@@ -295,6 +307,7 @@ class Building(Environment):
         """net_electricity_consumption_without_storage_and_pv` cost time series, in [$]."""
 
         return self.pricing.electricity_pricing[0:self.time_step + 1] * self.net_electricity_consumption_without_storage_and_pv
+
 
     @property
     def net_electricity_consumption_without_storage_and_pv(self) -> np.ndarray:
@@ -682,6 +695,14 @@ class Building(Environment):
             )
         else:
             self.__pricing = pricing
+    @district_load_target.setter
+    def district_load_target(self, district_load_target: DistrictLoadToTrack):
+        if district_load_target is None:
+            self.__district_load_target = DistrictLoadToTrack(
+                np.zeros(self.episode_tracker.simulation_time_steps, dtype='float32')
+            )
+        else:
+            self.__district_load_target = district_load_target
 
     @dhw_storage.setter
     def dhw_storage(self, dhw_storage: StorageTank):
@@ -969,6 +990,10 @@ class Building(Environment):
             **{
                 k.lstrip('_'): self.pricing.__getattr__(k.lstrip('_'))[self.time_step] 
                 for k, v in vars(self.pricing).items() if isinstance(v, np.ndarray)
+            },
+            **{
+                k.lstrip('_'): self.district_load_target.__getattr__(k.lstrip('_'))[self.time_step]
+                for k, v in vars(self.district_load_target).items() if isinstance(v, np.ndarray)
             },
             **{
                 k.lstrip('_'): self.carbon_intensity.__getattr__(k.lstrip('_'))[self.time_step] 
@@ -1317,6 +1342,28 @@ class Building(Environment):
         assert self.power_outage or demand <= max_device_output or abs(demand - max_device_output) < TOLERANCE, \
             f'demand is greater than {end_use}_device max output | {message}'
 
+    # # kathryn updated code to fix sign convention
+    # def ___demand_limit_check(self, end_use: str, demand: float, max_device_output: float):
+    #     # Convert to magnitudes to avoid sign-convention issues
+    #     eff_demand = abs(demand)
+    #     eff_capacity = abs(max_device_output)
+
+    #     # Check whether the device is big enough in magnitude
+    #     difference = eff_demand - eff_capacity
+    #     check = eff_demand <= eff_capacity or abs(difference) < TOLERANCE
+
+    #     # Debug message
+    #     message = (
+    #         f"timestep: {self.time_step}, building: {self.name}, outage: {self.power_outage}, "
+    #         f"demand: {demand}, output: {max_device_output}, "
+    #         f"eff_demand: {eff_demand}, eff_capacity: {eff_capacity}, "
+    #         f"difference: {difference}, check: {check},"
+    #     )
+
+    #     # # Only assert if not in an outage and the magnitude is truly insufficient
+    #     # assert self.power_outage or check, \
+    #     #     f"demand is greater than {end_use}_device max output | {message}"
+
     def ___electricity_consumption_polarity_check(self, end_use: str, device_output: float, electricity_consumption: float):
         message = f'timestep: {self.time_step}, building: {self.name}, device_output: {device_output}, electricity_consumption: {electricity_consumption}'
         assert electricity_consumption >= 0.0 or abs(electricity_consumption) < TOLERANCE, \
@@ -1549,11 +1596,10 @@ class Building(Environment):
                 x_sin, x_cos = pn * np.array(list(periodic_observations[key]))
                 low_limit[f'{key}_cos'], high_limit[f'{key}_cos'] = min(x_cos), max(x_cos)
                 low_limit[f'{key}_sin'], high_limit[f'{key}_sin'] = min(x_sin), max(x_sin)
-
             elif key == 'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta':
                 # will get set in the overriding  LogisticRegressionOccupantInteractionBuilding._get_observation_space_limits_data
                 pass
-
+            
             else:
                 low_limit[key] = min(data[key])
                 high_limit[key] = max(data[key])
@@ -1591,6 +1637,11 @@ class Building(Environment):
                 start_time_step=self.episode_tracker.simulation_start_time_step, 
                 end_time_step=self.episode_tracker.simulation_end_time_step
             ) for k in vars(self.pricing)},
+           **{k.lstrip('_'): self.district_load_target.__getattr__(
+                k.lstrip('_'), 
+                start_time_step=self.episode_tracker.simulation_start_time_step, 
+                end_time_step=self.episode_tracker.simulation_end_time_step
+            ) for k in vars(self.district_load_target)},
         }
     
     def estimate_action_space(self) -> spaces.Box:
@@ -2028,10 +2079,12 @@ class Building(Environment):
         self.energy_simulation.start_time_step = start_time_step
         self.weather.start_time_step = start_time_step
         self.pricing.start_time_step = start_time_step
+        self.district_load_target.start_time_step = start_time_step
         self.carbon_intensity.start_time_step = start_time_step
         self.energy_simulation.end_time_step = end_time_step
         self.weather.end_time_step = end_time_step
         self.pricing.end_time_step = end_time_step
+        self.district_load_target.end_time_step = end_time_step
         self.carbon_intensity.end_time_step = end_time_step
 
     def update_variables(self):
@@ -2245,7 +2298,6 @@ class DynamicsBuilding(Building):
     def apply_actions(self, **kwargs):
         super().apply_actions(**kwargs)
         self._update_dynamics_input()
-
         if self.simulate_dynamics:
             self.update_indoor_dry_bulb_temperature()
         else:

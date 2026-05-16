@@ -1,5 +1,35 @@
 [
     {
+        "function_name": "MultiObjectiveReward",
+        "stage": "reward_definition",
+        "required": true,
+        "depends_on": [],
+        "inputs": [
+            "env_metadata",
+            "reward_voltage",
+            "reward_line_loading",
+            "reward_cost",
+            "reward_electricity",
+            "reward_carbon",
+            "reward_comfort",
+            "line_loading_limit",
+            "voltage_deadband",
+            "voltage_linear_limit",
+            "comfort_deadband",
+            "comfort_linear_limit",
+            "voltage_weight",
+            "line_loading_weight",
+            "cost_weight",
+            "electricity_weight",
+            "carbon_weight",
+            "comfort_weight"
+        ],
+        "outputs": [
+            "reward"
+        ],
+        "description": "Custom CityLearn reward class combining grid voltage, line loading, energy, cost, carbon, and comfort terms."
+    },
+    {
         "function_name": "build_neighborhood_schema",
         "stage": "neighborhood_build",
         "required": false,
@@ -14,27 +44,69 @@
         "outputs": [
             "schema_path"
         ],
-        "description": "Generate CityLearn neighborhood schema using EnergyPlus."
+        "description": "Generate a CityLearn neighborhood schema from EnergyPlus load profiles."
+    },
+    {
+        "function_name": "build_network",
+        "stage": "grid_init",
+        "required": true,
+        "depends_on": [],
+        "inputs": [
+            "grid_model",
+            "case_name",
+            "dss_path",
+            "max_i_ka",
+            "unbalanced"
+        ],
+        "outputs": [
+            "net"
+        ],
+        "description": "Build the distribution grid model, using pandapower or OpenDSS."
     },
     {
         "function_name": "create_citylearn_env",
         "stage": "env_setup",
         "required": true,
-        "depends_on": [],
+        "depends_on": [
+            "build_network"
+        ],
         "inputs": [
             "dataset",
             "central",
+            "observe_voltage",
+            "observe_line_loading",
             "use_neighborhood",
             "idd_filepath",
             "neighborhood_schema_path",
             "neighborhood_build_kwargs",
-            "optimize_grid",
-            "node_building_number"
+            "reward_function",
+            "reward_function_kwargs",
+            "pp_net",
+            "building_bus_map",
+            "building_number"
         ],
         "outputs": [
             "env"
         ],
-        "description": "Create CityLearn environment with optional grid-based reward."
+        "description": "Create the CityLearn environment with optional neighborhood schema, grid observations, reward settings, and building load scaling."
+    },
+    {
+        "function_name": "build_building_bus_map",
+        "stage": "grid_mapping",
+        "required": true,
+        "depends_on": [
+            "create_citylearn_env",
+            "build_network"
+        ],
+        "inputs": [
+            "env",
+            "net",
+            "slack_bus"
+        ],
+        "outputs": [
+            "building_bus_map"
+        ],
+        "description": "Map CityLearn buildings to non-slack grid buses."
     },
     {
         "function_name": "create_citylearn_agent",
@@ -46,127 +118,155 @@
         "inputs": [
             "env",
             "strategy",
-            "episodes"
+            "episodes",
+            "agent_kwargs"
         ],
         "outputs": [
             "agent"
         ],
-        "description": "Initialize and optionally train control agent."
-    },
-    {
-        "function_name": "evaluate_citylearn_kpis",
-        "stage": "control_simulation",
-        "required": false,
-        "depends_on": [
-            "create_citylearn_agent"
-        ],
-        "inputs": [
-            "agent"
-        ],
-        "outputs": [
-            "kpis"
-        ],
-        "description": "Evaluate trained CityLearn agent."
+        "description": "Create and optionally train a CityLearn control agent, including RBC, baseline, PPO, SAC, DDPG, and TD3."
     },
     {
         "function_name": "run_citylearn",
         "stage": "control_simulation",
+        "required": true,
+        "depends_on": [
+            "create_citylearn_env",
+            "create_citylearn_agent"
+        ],
+        "inputs": [
+            "env",
+            "model",
+            "trim_start"
+        ],
+        "outputs": [
+            "building_kw"
+        ],
+        "description": "Run the CityLearn episode and export building net electricity consumption as a time-series load matrix."
+    },
+    {
+        "function_name": "evaluate_citylearn_kpis",
+        "stage": "control_evaluation",
         "required": false,
         "depends_on": [
             "create_citylearn_agent"
         ],
         "inputs": [
-            "strategy",
-            "episodes",
-            "central",
-            "dataset",
-            "use_neighborhood",
-            "idd_filepath",
-            "neighborhood_schema_path",
-            "neighborhood_build_kwargs",
-            "optimize_grid",
-            "node_building_number"
+            "agent",
+            "save"
         ],
         "outputs": [
-            "building_kw",
-            "model"
+            "kpis"
         ],
-        "description": "Run CityLearn simulation and produce building load profile."
-    },
-    {
-        "function_name": "load_network",
-        "stage": "grid_init",
-        "required": false,
-        "depends_on": [
-            "run_citylearn"
-        ],
-        "inputs": [
-            "case_name"
-        ],
-        "outputs": [
-            "net"
-        ],
-        "description": "Load pandapower test network."
+        "description": "Evaluate CityLearn control KPIs and optionally save them to CSV."
     },
     {
         "function_name": "run_grid",
         "stage": "grid_analysis",
-        "required": false,
+        "required": true,
         "depends_on": [
-            "load_network",
-            "run_citylearn"
+            "run_citylearn",
+            "build_network",
+            "build_building_bus_map"
         ],
         "inputs": [
             "building_kw",
-            "net"
+            "net",
+            "building_bus_map",
+            "plot",
+            "save",
+            "save_kpis"
         ],
         "outputs": [
             "grid_results"
         ],
-        "description": "Run single time-series powerflow with system total load."
+        "description": "Run time-series grid power flow with building loads, and optionally save voltage, line loading, plots, and grid KPIs."
     },
     {
-        "function_name": "plot_grid_results",
-        "stage": "grid_postprocessing",
+        "function_name": "evaluate_grid_kpis",
+        "stage": "grid_evaluation",
         "required": false,
         "depends_on": [
             "run_grid"
         ],
         "inputs": [
-            "grid_results"
+            "grid_results",
+            "voltage_lower_limit",
+            "voltage_upper_limit",
+            "loading_limit_percent",
+            "severe_loading_limit_percent",
+            "save"
         ],
-        "outputs": [],
-        "description": "Generate voltage and line loading figures."
+        "outputs": [
+            "kpis"
+        ],
+        "description": "Calculate grid load, voltage, and line loading KPIs from power-flow results."
     },
     {
-        "function_name": "save_grid_results",
-        "stage": "grid_postprocessing",
+        "function_name": "analyze_short_circuit",
+        "stage": "grid_fault_analysis",
         "required": false,
         "depends_on": [
-            "run_grid"
+            "build_network"
         ],
         "inputs": [
-            "grid_results"
+            "net",
+            "case",
+            "ip",
+            "ith",
+            "plot",
+            "save"
         ],
-        "outputs": [],
-        "description": "Save time-series grid results to CSV."
+        "outputs": [
+            "short_circuit_results"
+        ],
+        "description": "Run short-circuit analysis for pandapower or OpenDSS grids, with optional plot and CSV export."
     },
     {
         "function_name": "analyze_n1",
         "stage": "grid_resilience",
         "required": false,
         "depends_on": [
-            "load_network",
-            "run_citylearn"
+            "run_citylearn",
+            "build_network",
+            "build_building_bus_map"
         ],
         "inputs": [
             "net",
             "building_kw",
+            "building_bus_map",
             "vm_tol",
             "loading_threshold",
-            "T_run"
+            "T_run",
+            "plot",
+            "save"
         ],
+        "outputs": [
+            "under_ts",
+            "over_ts",
+            "overload_ts",
+            "summary",
+            "detail"
+        ],
+        "description": "Run N-1 contingency analysis and report undervoltage, overvoltage, and overload violations."
+    },
+    {
+        "function_name": "run",
+        "stage": "workflow_entrypoint",
+        "required": false,
+        "depends_on": [
+            "build_network",
+            "create_citylearn_env",
+            "build_building_bus_map",
+            "create_citylearn_agent",
+            "run_citylearn",
+            "evaluate_citylearn_kpis",
+            "run_grid",
+            "analyze_short_circuit",
+            "analyze_n1"
+        ],
+        "inputs": [],
         "outputs": [],
-        "description": "Run N-1 contingency analysis based on system total load."
+        "description": "Execute the complete default workflow in the runnable CityLearn-grid script."
     }
 ]

@@ -142,6 +142,7 @@ class WorkflowManager:
             "simulation_results": None,
             "evaluation_results": None,
             "feedback": None,
+            "retrieval": None,
             "iteration_decision": None
         }
         # Initialize code memory to store generated code per iteration
@@ -697,8 +698,6 @@ class WorkflowManager:
                     mode="blueprint",
                     blueprint=self.blueprint
                 )
-            self._save_artifact("task_spec", self.state["task_spec"])
-            
             # Initialize blueprint metadata (blueprint has been filled by task understanding agent)
             if self.current_iteration == 0:
                 self.logger.info("Setting blueprint metadata after task understanding")
@@ -716,8 +715,18 @@ class WorkflowManager:
             # Step 2: Skip data analysis and model planning - set to None
             self.state["data_analysis"] = None
             self.state["model_plan"] = None
+
+            # Step 3: Retrieve codebase workflow before code generation
+            if self.current_iteration == 0:
+                self.state["retrieval"] = self.agents["codebase_retrieval"].process(
+                    user_goal=self.task_description
+                )
+                self._save_artifact("retrieval", self.state["retrieval"])
+            if self.state.get("retrieval"):
+                self.state["task_spec"]["retrieved_workflow_code"] = self.state["retrieval"]["code"]
+            self._save_artifact("task_spec", self.state["task_spec"])
             
-            # Step 3: Code Generation using blueprint and task specification
+            # Step 4: Code Generation using blueprint and task specification
             # Load previous iteration code if exists
             prev_code = None
             if self.current_iteration > 0 and self.current_iteration - 1 in self.code_memory:
@@ -822,13 +831,22 @@ class WorkflowManager:
                 "simulation_type": "lite_mode",
                 "objective": self.task_description
             }
-            self._save_artifact("task_spec", self.state["task_spec"])
 
             # Step 2: Skip data analysis and model planning - set to None
             self.state["data_analysis"] = None
             self.state["model_plan"] = None
+
+            # Step 3: Retrieve codebase workflow before code generation
+            if self.current_iteration == 0:
+                self.state["retrieval"] = self.agents["codebase_retrieval"].process(
+                    user_goal=self.task_description
+                )
+                self._save_artifact("retrieval", self.state["retrieval"])
+            if self.state.get("retrieval"):
+                self.state["task_spec"]["retrieved_workflow_code"] = self.state["retrieval"]["code"]
+            self._save_artifact("task_spec", self.state["task_spec"])
             
-            # Step 3: Code Generation using lite template
+            # Step 4: Code Generation using lite template
             # Load previous iteration code if exists
             prev_code = None
             if self.current_iteration > 0 and self.current_iteration - 1 in self.code_memory:
@@ -934,6 +952,10 @@ class WorkflowManager:
             # Check if feedback contains critical issues
             if self.state["feedback"] and "critical_issues" in self.state["feedback"]:
                 critical_issues = self.state["feedback"].get("critical_issues", [])
+                critical_issues = [
+                    issue for issue in critical_issues
+                    if not self._is_stale_entrypoint_issue(issue)
+                ]
                 
                 # Create iteration key
                 iteration_key = f"iteration_{self.current_iteration}"
@@ -957,6 +979,29 @@ class WorkflowManager:
             
         except Exception as e:
             self.logger.error(f"Error updating historical fix log: {e}")
+
+    def _is_stale_entrypoint_issue(self, issue):
+        """Return True for legacy direct-main entrypoint complaints."""
+        if not isinstance(issue, dict):
+            return False
+
+        text = " ".join(
+            str(issue.get(key, ""))
+            for key in ("issue", "impact", "solution", "description", "type", "location")
+        ).lower()
+        terms = (
+            "direct main",
+            "direct call",
+            "global scope",
+            "__main__",
+            "main() invocation",
+            "main function invocation",
+            "main function call",
+            "entrypoint",
+            "entry point",
+            "sandbox execution",
+        )
+        return any(term in text for term in terms)
     
     def _save_historical_fix_log(self):
         """Save the historical fix log to a file."""

@@ -1,0 +1,18 @@
+{
+  "iteration_0": [
+    {
+      "issue": "Voltage sensitivity analysis and building redistribution logic are completely absent",
+      "location": "Missing - no function or code block exists for this",
+      "recommendation": "After first run_grid call, compute per-bus voltage std or max deviation from vm_ts, identify high-sensitivity buses, reassign buildings away from those buses in building_bus_map, then call run_grid again with the new map.",
+      "status": "open",
+      "fixed_log": ""
+    },
+    {
+      "issue": "KPI comparison and plot saving between before/after redistribution are not implemented",
+      "location": "Missing - evaluate_grid_kpis is never called",
+      "recommendation": "Call evaluate_grid_kpis on both grid_results_before and grid_results_after, merge the two KPI DataFrames, save to CSV, and generate matplotlib comparison bar plots saved via plt.savefig to DATA_DIR.",
+      "status": "open",
+      "fixed_log": ""
+    }
+  ]
+}

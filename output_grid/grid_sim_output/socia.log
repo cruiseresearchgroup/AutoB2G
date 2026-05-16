@@ -1,0 +1,541 @@
+2026-05-07 17:49:02,308 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 17:49:02,308 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 17:49:02,308 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 17:49:02,320 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 17:49:02,387 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 17:49:02,410 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 17:49:02,411 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 17:49:02,411 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 17:49:02,411 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 17:49:02,417 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 17:49:47,645 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 17:49:47,681 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 1
+2026-05-07 17:49:47,814 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 17:49:47,815 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 17:49:47,827 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 17:51:27,428 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 17:51:27,641 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 2
+2026-05-07 17:51:27,642 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 17:51:27,642 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 17:51:27,643 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 17:51:27,658 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 17:51:27,675 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 17:54:43,714 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 17:54:43,716 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 3
+2026-05-07 17:54:43,716 - SOCIA.CodeVerificationAgent - INFO - Verification result: The script largely follows the required workflow and targets pandapower with the IEEE 33-bus case, generates building_kw from CityLearn, maps buildings to buses, runs the grid power flow, computes/saves KPIs, and saves figures. However, it unconditionally imports opendssdirect, which can cause runtime failure when OpenDSS is not installed even though the run uses pandapower. In addition, while building_number=250 is set, the code may not create 250 distinct grid-connected loads if the dataset contains fewer buildings; it scales loads instead of creating 250 unique load elements.
+2026-05-07 17:54:43,716 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 17:54:43,717 - SOCIA.WorkflowManager - WARNING - Iteration 1: Code verification FAILED
+2026-05-07 17:54:43,717 - SOCIA.WorkflowManager - WARNING - Code verification failed, skipping execution and evaluation
+2026-05-07 17:54:43,717 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 17:54:43,717 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 17:54:43,717 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 17:54:43,729 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 17:56:06,659 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 17:56:06,665 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 4
+2026-05-07 17:56:06,665 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 18:10:31,298 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 18:10:31,298 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_0
+2026-05-07 18:10:31,299 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 18:10:31,299 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 18:10:31,311 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:10:41,073 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 18:10:41,074 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 18:10:41,074 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 18:10:41,085 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 18:10:41,157 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 18:10:41,180 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 18:10:41,180 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 18:10:41,180 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 18:10:41,180 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 18:10:41,186 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:11:14,501 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:11:14,563 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 1
+2026-05-07 18:11:14,690 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 18:11:14,690 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 18:11:14,716 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:12:29,256 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:12:29,259 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 2
+2026-05-07 18:12:29,260 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 18:12:29,260 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 18:12:29,260 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 18:12:29,266 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 18:12:29,289 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:15:24,316 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:15:24,324 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 3
+2026-05-07 18:15:24,324 - SOCIA.CodeVerificationAgent - INFO - Verification result: Code verification passed with minor non-blocking review comments.
+2026-05-07 18:15:24,324 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 18:15:24,325 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 18:15:24,325 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 18:15:24,325 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 18:15:24,326 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 18:16:10,580 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 18:16:10,580 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 46.25 seconds
+2026-05-07 18:16:10,580 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 18:16:10,580 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 18:16:10,596 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 18:16:10,596 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 18:16:10,596 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 18:16:10,597 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 18:16:10,597 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 18:16:10,597 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 18:16:10,620 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:17:40,251 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:17:40,251 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 4
+2026-05-07 18:17:40,251 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 18:33:23,272 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 18:33:23,272 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_0
+2026-05-07 18:33:23,273 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 18:33:23,273 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 18:33:23,285 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:33:28,986 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 18:33:28,986 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 18:33:28,986 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 18:33:28,998 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 18:33:29,063 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 18:33:29,086 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 18:33:29,086 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 18:33:29,086 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 18:33:29,086 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 18:33:29,092 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 18:33:58,008 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 18:33:58,009 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 18:33:58,009 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 18:33:58,021 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 18:33:58,087 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 18:33:58,110 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 18:33:58,110 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 18:33:58,110 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 18:33:58,110 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 18:33:58,116 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 18:34:00,782 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 18:34:00,787 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 1
+2026-05-07 18:34:00,856 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 18:34:00,857 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 18:34:00,869 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 18:36:12,787 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 18:36:12,792 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 2
+2026-05-07 18:36:12,792 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 18:36:12,792 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 18:36:12,793 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 18:36:12,797 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 18:36:12,841 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 18:36:37,844 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 18:36:37,848 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 3
+2026-05-07 18:36:37,849 - SOCIA.CodeVerificationAgent - INFO - Verification result: The code is syntactically correct, properly imports all required modules, correctly implements the 25-building non-uniform allocation (5,5,3,3,3,3,3) across 7 grid nodes using pandapower case33bw, follows the required workflow order, saves KPIs and plots as requested, and has a valid entrypoint. No critical or major issues were found.
+2026-05-07 18:36:37,849 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 18:36:37,850 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 18:36:37,850 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 18:36:37,850 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 18:36:37,850 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 18:37:12,643 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 18:37:12,643 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 34.79 seconds
+2026-05-07 18:37:12,643 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 18:37:12,643 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 18:37:12,645 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 18:37:12,645 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 18:37:12,645 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 18:37:12,645 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 18:37:12,645 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 18:37:12,645 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 18:37:12,657 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 18:37:17,866 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 18:37:17,870 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 4
+2026-05-07 18:37:17,870 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 18:41:31,278 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 18:41:31,278 - SOCIA.WorkflowManager - INFO - Added 1 critical issues to historical fix log for iteration_0
+2026-05-07 18:41:31,279 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 18:41:31,279 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 18:41:31,292 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 18:41:38,414 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 18:41:38,415 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 18:41:38,415 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 18:41:38,427 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 18:41:38,492 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 18:41:38,514 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 18:41:38,514 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 18:41:38,514 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 18:41:38,514 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 18:41:38,520 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: gpt-5-mini
+2026-05-07 18:41:39,447 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+2026-05-07 18:41:39,448 - SOCIA.LLMProvider - ERROR - Error calling Anthropic API: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5-mini'}, 'request_id': 'req_011CanukkCUpNHN7oy1Caau3'}
+2026-05-07 18:41:39,448 - SOCIA - ERROR - An error occurred: Error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5-mini'}, 'request_id': 'req_011CanukkCUpNHN7oy1Caau3'}
+2026-05-07 18:41:39,449 - SOCIA - INFO - API calls total=1, success=0, failed=1
+2026-05-07 18:43:08,293 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 18:43:08,293 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 18:43:08,293 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 18:43:08,305 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 18:43:08,374 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 18:43:08,396 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 18:43:08,396 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 18:43:08,396 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 18:43:08,396 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 18:43:08,402 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 18:43:20,933 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:43:20,962 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 1
+2026-05-07 18:43:21,037 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 18:43:21,037 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 18:43:21,049 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 18:45:12,520 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:45:12,732 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 2
+2026-05-07 18:45:12,733 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 18:45:12,733 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 18:45:12,733 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 18:45:12,739 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 18:45:12,753 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 18:46:12,372 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:46:12,376 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 3
+2026-05-07 18:46:12,389 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 18:46:12,390 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 18:46:12,390 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 18:46:12,390 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 18:46:12,390 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 18:46:43,397 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 18:46:43,397 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 31.01 seconds
+2026-05-07 18:46:43,397 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 18:46:43,397 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 18:46:43,413 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 18:46:43,413 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 18:46:43,413 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 18:46:43,413 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 18:46:43,413 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 18:46:43,413 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 18:46:43,429 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 18:47:37,381 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 18:47:37,381 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 4
+2026-05-07 18:47:37,381 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 19:37:40,766 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 19:37:40,766 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_0
+2026-05-07 19:37:40,767 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 19:37:40,767 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 19:37:40,779 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:37:59,884 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:37:59,886 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 5
+2026-05-07 19:37:59,887 - SOCIA.IterationControlAgent - INFO - Added human feedback to iteration decision: No
+2026-05-07 19:37:59,887 - SOCIA.IterationControlAgent - INFO - Iteration decision: continue
+2026-05-07 19:37:59,887 - SOCIA.WorkflowManager - INFO - Starting iteration 2/100 (soft limit: 3)
+2026-05-07 19:37:59,888 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 19:37:59,906 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:39:37,735 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:39:37,946 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 6
+2026-05-07 19:39:37,947 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 19:39:37,947 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 19:39:37,948 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 19:39:37,965 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 19:39:37,987 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:40:11,190 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:40:11,190 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 7
+2026-05-07 19:40:11,190 - SOCIA.CodeVerificationAgent - INFO - Verification result: The script is syntactically correct, contains the required entrypoint, and implements the CityLearn-to-grid workflow with the requested 25-building / 7-node (5,5,3,3,3,3,3) distribution. A few issues and potential runtime dependency risks were identified but none are fatal to the logic of the implementation.
+2026-05-07 19:40:11,190 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 19:40:11,190 - SOCIA.WorkflowManager - INFO - Iteration 2: Code verification PASSED
+2026-05-07 19:40:11,190 - SOCIA.WorkflowManager - INFO - Iteration 2: Starting simulation execution with subprocess
+2026-05-07 19:40:11,190 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 19:40:11,190 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 19:40:43,235 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 19:40:43,235 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 32.03 seconds
+2026-05-07 19:40:43,235 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 19:40:43,235 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 19:40:43,251 - SOCIA.WorkflowManager - INFO - Iteration 2: Simulation execution completed successfully
+2026-05-07 19:40:43,251 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 19:40:43,251 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 19:40:43,251 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 19:40:43,252 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 19:40:43,252 - SOCIA.FeedbackGenerationAgent - INFO - Generating code diff between iterations 0 and 1
+2026-05-07 19:40:43,252 - SOCIA.FeedbackGenerationAgent - INFO - Generated code diff with 4058 characters
+2026-05-07 19:40:43,267 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:40:53,957 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 502 Bad Gateway"
+2026-05-07 19:40:53,958 - openai._base_client - INFO - Retrying request to /responses in 60.000000 seconds
+2026-05-07 19:42:33,211 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 19:42:33,211 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 19:42:33,211 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 19:42:33,223 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 19:42:33,288 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 19:42:33,311 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 19:42:33,311 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 19:42:33,311 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 19:42:33,311 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 19:42:33,317 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:43:01,892 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:43:01,953 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 1
+2026-05-07 19:43:02,073 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 19:43:02,073 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 19:43:02,105 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:46:09,916 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:46:10,119 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 2
+2026-05-07 19:46:10,119 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 19:46:10,135 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 19:46:10,135 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 19:46:10,135 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 19:46:10,167 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:47:08,139 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:47:08,140 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 3
+2026-05-07 19:47:08,141 - SOCIA.CodeVerificationAgent - INFO - Verification result: The script is largely syntactically correct and implements the required baseline + capacitor-add + re-run workflow for an OpenDSS low-voltage case, saving KPIs and plots. However there are several issues: an incorrect observation key check in the reward logic, an unnecessary top-level import of pandapower (violates the special requirement to avoid requiring pandapower for the OpenDSS LV workflow), and a potential infinite loop when searching for the 'citylearn' package via __file__ parent traversal. These issues should be fixed before trusting production use.
+2026-05-07 19:47:08,141 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 19:47:08,141 - SOCIA.WorkflowManager - WARNING - Iteration 1: Code verification FAILED
+2026-05-07 19:47:08,141 - SOCIA.WorkflowManager - WARNING - Code verification failed, skipping execution and evaluation
+2026-05-07 19:47:08,141 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 19:47:08,141 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 19:47:08,141 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 19:47:08,166 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:47:38,253 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:47:38,254 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 4
+2026-05-07 19:47:38,254 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 19:48:12,037 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 19:48:12,038 - SOCIA.WorkflowManager - INFO - Added 3 critical issues to historical fix log for iteration_0
+2026-05-07 19:48:12,038 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 19:48:12,038 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 19:48:12,051 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:48:38,052 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:48:38,052 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 5
+2026-05-07 19:48:38,052 - SOCIA.IterationControlAgent - INFO - Added human feedback to iteration decision: No
+2026-05-07 19:48:38,052 - SOCIA.IterationControlAgent - INFO - Iteration decision: continue
+2026-05-07 19:48:38,052 - SOCIA.WorkflowManager - INFO - Starting iteration 2/100 (soft limit: 3)
+2026-05-07 19:48:38,052 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 19:48:38,083 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:50:54,968 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:50:54,974 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 6
+2026-05-07 19:50:54,974 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 19:50:54,974 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 19:50:54,980 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 19:50:54,981 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 19:50:55,018 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:51:41,686 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:51:41,686 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 7
+2026-05-07 19:51:41,686 - SOCIA.CodeVerificationAgent - INFO - Verification result: The script is syntactically correct and implements the requested baseline and compensated OpenDSS-based building-grid co-simulations. It executes the required workflow: build_network -> create_citylearn_env -> build_building_bus_map -> create_citylearn_agent -> run_citylearn -> run_grid, identifies the weakest bus, adds a capacitor, reruns the simulation, and saves KPIs, comparison plots, and the modified network configuration. A few minor issues and potential runtime caveats are noted.
+2026-05-07 19:51:41,686 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 19:51:41,686 - SOCIA.WorkflowManager - INFO - Iteration 2: Code verification PASSED
+2026-05-07 19:51:41,686 - SOCIA.WorkflowManager - INFO - Iteration 2: Starting simulation execution with subprocess
+2026-05-07 19:51:41,686 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 19:51:41,686 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 19:51:58,015 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 19:51:58,015 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 16.31 seconds
+2026-05-07 19:51:58,015 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 19:51:58,015 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 19:51:58,016 - SOCIA.WorkflowManager - INFO - Iteration 2: Simulation execution completed successfully
+2026-05-07 19:51:58,016 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 19:51:58,016 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 19:51:58,017 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 19:51:58,017 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 19:51:58,017 - SOCIA.FeedbackGenerationAgent - INFO - Generating code diff between iterations 0 and 1
+2026-05-07 19:51:58,020 - SOCIA.FeedbackGenerationAgent - INFO - Generated code diff with 3564 characters
+2026-05-07 19:51:58,043 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:52:30,976 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 19:52:30,976 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 8
+2026-05-07 19:52:30,976 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 19:54:47,595 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 19:54:47,595 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_1
+2026-05-07 19:54:47,595 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 19:54:47,595 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 19:54:47,609 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5-mini
+2026-05-07 19:55:14,886 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 19:55:14,886 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 19:55:14,886 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 19:55:14,898 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 19:55:14,967 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 19:55:14,991 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 19:55:14,991 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 19:55:14,991 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 19:55:14,991 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 19:55:14,997 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 19:55:17,845 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 19:55:17,845 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 1
+2026-05-07 19:55:17,955 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 19:55:17,955 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 19:55:17,987 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 19:57:31,333 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 19:57:31,341 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 2
+2026-05-07 19:57:31,341 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 19:57:31,341 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 19:57:31,342 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 19:57:31,352 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 19:57:31,409 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 19:58:09,439 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 19:58:09,454 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 3
+2026-05-07 19:58:09,454 - SOCIA.CodeVerificationAgent - ERROR - Error parsing JSON response: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2026-05-07 19:58:09,454 - SOCIA - ERROR - An error occurred: 'summary'
+2026-05-07 19:58:09,454 - SOCIA - INFO - API calls total=3, success=3, failed=0
+2026-05-07 20:00:50,075 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:00:50,075 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:00:50,075 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:00:50,088 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:00:50,160 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:00:50,184 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:00:50,184 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:00:50,185 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:00:50,185 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:00:50,191 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:00:53,108 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:00:53,111 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 1
+2026-05-07 20:00:53,186 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 20:00:53,187 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 20:00:53,199 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:02:20,472 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:02:20,473 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:02:20,473 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:02:20,484 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:02:20,555 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:02:20,578 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:02:20,579 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:02:20,579 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:02:20,579 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:02:20,585 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:02:23,607 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:02:23,623 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 1
+2026-05-07 20:02:23,840 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 20:02:23,855 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 20:02:23,890 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:05:13,931 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:05:13,931 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 2
+2026-05-07 20:05:13,931 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 20:05:13,931 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 20:05:13,931 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 20:05:13,954 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 20:05:14,064 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:05:39,605 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:05:39,605 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 3
+2026-05-07 20:05:39,605 - SOCIA.CodeVerificationAgent - INFO - Verification result: The code is syntactically correct, properly imports all required modules, correctly implements the 25-building co-simulation with 7-node allocation, voltage sensitivity analysis, redistribution, and before/after KPI comparison with saved outputs. The workflow order is preserved, the annex96 schema is used via dataset=None, and a valid entrypoint exists. Minor issues include an unused variable and lack of bounds checking on available_buses length, but neither is critical.
+2026-05-07 20:05:39,605 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 20:05:39,605 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 20:05:39,605 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 20:05:39,605 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 20:05:39,605 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 20:07:38,444 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 20:07:38,444 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 118.82 seconds
+2026-05-07 20:07:38,444 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 20:07:38,444 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 20:07:38,445 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 20:07:38,445 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 20:07:38,445 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 20:07:38,445 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 20:07:38,445 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 20:07:38,445 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 20:07:38,460 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:07:44,723 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:07:44,723 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 4
+2026-05-07 20:07:44,723 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 20:11:18,826 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 20:11:18,826 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_0
+2026-05-07 20:11:18,826 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 20:11:18,827 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 20:11:18,839 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:11:21,017 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:11:21,018 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:11:21,018 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:11:21,029 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:11:21,097 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:11:21,120 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:11:21,120 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:11:21,120 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:11:21,120 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:11:21,126 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:11:24,169 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:11:24,172 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 1
+2026-05-07 20:11:24,244 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 20:11:24,245 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 20:11:24,257 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:14:02,441 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:14:02,441 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 2
+2026-05-07 20:14:02,441 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 20:14:02,441 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 20:14:02,441 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 20:14:02,463 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 20:14:02,595 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:14:31,187 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:14:31,187 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 3
+2026-05-07 20:14:31,187 - SOCIA.CodeVerificationAgent - ERROR - Error parsing JSON response: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2026-05-07 20:14:31,187 - SOCIA.CodeVerificationAgent - INFO - Verification result: Code verification completed with valid syntax, but LLM verification response parsing failed
+2026-05-07 20:14:31,187 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 20:14:31,187 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 20:14:31,194 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 20:14:31,194 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 20:14:31,194 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 20:16:29,257 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 20:16:29,257 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 118.05 seconds
+2026-05-07 20:16:29,257 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 20:16:29,257 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 20:16:29,257 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 20:16:29,258 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 20:16:29,258 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 20:16:29,258 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 20:16:29,258 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 20:16:29,258 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 20:16:29,288 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:16:58,939 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-05-07 20:16:58,951 - SOCIA.LLMProvider - INFO - Anthropic API call recorded. Total API calls: 4
+2026-05-07 20:16:58,951 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed
+2026-05-07 20:20:25,115 - SOCIA.WorkflowManager - INFO - No user feedback provided - using system feedback only
+2026-05-07 20:20:25,115 - SOCIA.WorkflowManager - INFO - Added 2 critical issues to historical fix log for iteration_0
+2026-05-07 20:20:25,115 - SOCIA.WorkflowManager - INFO - Saved historical fix log to C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\historical_fix_log.json
+2026-05-07 20:20:25,115 - SOCIA.IterationControlAgent - INFO - Making iteration decision
+2026-05-07 20:20:25,128 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: claude-sonnet-4-6
+2026-05-07 20:20:27,903 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:20:27,903 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:20:27,904 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:20:27,915 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:20:27,983 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:20:28,010 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:20:28,010 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:20:28,010 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:20:28,010 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:20:28,016 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: gpt-5
+2026-05-07 20:20:28,820 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+2026-05-07 20:20:28,821 - SOCIA.LLMProvider - ERROR - Error calling Anthropic API: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5'}, 'request_id': 'req_011Cao3HqjHovgaXBfuY3PP1'}
+2026-05-07 20:20:28,822 - SOCIA - ERROR - An error occurred: Error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5'}, 'request_id': 'req_011Cao3HqjHovgaXBfuY3PP1'}
+2026-05-07 20:20:28,822 - SOCIA - INFO - API calls total=1, success=0, failed=1
+2026-05-07 20:20:40,929 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:20:40,930 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:20:40,930 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:20:40,942 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:20:41,013 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:20:41,035 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:20:41,035 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:20:41,035 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:20:41,035 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:20:41,041 - SOCIA.LLMProvider - INFO - Overriding anthropic model from LLM_MODEL: gpt-5
+2026-05-07 20:20:41,865 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+2026-05-07 20:20:41,866 - SOCIA.LLMProvider - ERROR - Error calling Anthropic API: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5'}, 'request_id': 'req_011Cao3JoRursXFJFKLkrBYf'}
+2026-05-07 20:20:41,866 - SOCIA - ERROR - An error occurred: Error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: gpt-5'}, 'request_id': 'req_011Cao3JoRursXFJFKLkrBYf'}
+2026-05-07 20:20:41,867 - SOCIA - INFO - API calls total=1, success=0, failed=1
+2026-05-07 20:20:45,527 - SOCIA - INFO - Starting SOCIA in LITE mode
+2026-05-07 20:20:45,528 - SOCIA.WorkflowManager - INFO - Successfully loaded task description from C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\output_grid\grid_sim_output\task_description.json
+2026-05-07 20:20:45,528 - SOCIA.WorkflowManager - INFO - Data folder set to: C:\Users\Ray\PycharmProjects\pythonProject\AutoB2G - Copy\Grid_data
+2026-05-07 20:20:45,539 - SOCIA.TaskUnderstandingAgent - WARNING - No prompt template specified, using default
+2026-05-07 20:20:45,609 - SOCIA.SimulationExecutionAgent - WARNING - Docker is not installed. Falling back to subprocess execution.
+2026-05-07 20:20:45,631 - SOCIA.WorkflowManager - INFO - Agents initialized via dependency injection
+2026-05-07 20:20:45,632 - SOCIA.WorkflowManager - INFO - Starting workflow
+2026-05-07 20:20:45,632 - SOCIA.WorkflowManager - INFO - Starting iteration 1/100 (soft limit: 3)
+2026-05-07 20:20:45,632 - SOCIA.CodebaseRetrievalAgent - INFO - Retrieving codebase workflow
+2026-05-07 20:20:45,638 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 20:22:06,391 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 20:22:06,479 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 1
+2026-05-07 20:22:06,689 - SOCIA.CodebaseRetrievalAgent - INFO - Codebase workflow retrieval completed
+2026-05-07 20:22:06,691 - SOCIA.CodeGenerationAgent - INFO - Generating simulation code
+2026-05-07 20:22:06,720 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 20:24:46,751 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 20:24:46,954 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 2
+2026-05-07 20:24:46,954 - SOCIA.CodeGenerationAgent - INFO - Starting self-checking loop for code improvement (mode=lite)
+2026-05-07 20:24:46,956 - SOCIA.CodeGenerationAgent - INFO - Self-checking loop disabled (max_attempts <= 0)
+2026-05-07 20:24:46,956 - SOCIA.CodeGenerationAgent - INFO - Code generation completed
+2026-05-07 20:24:46,965 - SOCIA.CodeVerificationAgent - INFO - Verifying simulation code
+2026-05-07 20:24:46,999 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 20:26:07,115 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 20:26:07,117 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 3
+2026-05-07 20:26:07,117 - SOCIA.CodeVerificationAgent - INFO - Verification result: The script is syntactically correct, imports are present, and it adheres to the required building-grid co-simulation workflow. It runs a 25-building simulation using the default mapping, computes voltage sensitivity, redistributes buildings to mitigate voltage violations, reruns the grid analysis, and saves allocation configurations, voltage statistics, and comparison plots. Minor issues are limited to a few unused imports/variables.
+2026-05-07 20:26:07,117 - SOCIA.CodeVerificationAgent - INFO - Code verification completed
+2026-05-07 20:26:07,118 - SOCIA.WorkflowManager - INFO - Iteration 1: Code verification PASSED
+2026-05-07 20:26:07,118 - SOCIA.WorkflowManager - INFO - Iteration 1: Starting simulation execution with subprocess
+2026-05-07 20:26:07,118 - SOCIA.SimulationExecutionAgent - INFO - Executing simulation code in lite mode
+2026-05-07 20:26:07,118 - SOCIA.SimulationExecutionAgent - INFO - Executing code with subprocess
+2026-05-07 20:27:07,096 - SOCIA.SimulationExecutionAgent - INFO - Subprocess execution completed with status: success
+2026-05-07 20:27:07,096 - SOCIA.SimulationExecutionAgent - INFO - Execution time: 59.96 seconds
+2026-05-07 20:27:07,096 - SOCIA.SimulationExecutionAgent - INFO - Return code: 0
+2026-05-07 20:27:07,096 - SOCIA.SimulationExecutionAgent - WARNING - Runtime errors detected: ["C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:235: UserWarning: \x1b[33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64\x1b[0m", '  gym.logger.warn(', "C:\\Users\\Ray\\.conda\\envs\\pythonProject\\lib\\site-packages\\gymnasium\\spaces\\box.py:305: UserWarning: \x1b[33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64\x1b[0m", '  gym.logger.warn(']
+2026-05-07 20:27:07,096 - SOCIA.WorkflowManager - INFO - Iteration 1: Simulation execution completed successfully
+2026-05-07 20:27:07,096 - SOCIA.ResultEvaluationAgent - INFO - Evaluating simulation results
+2026-05-07 20:27:07,096 - SOCIA.ResultEvaluationAgent - WARNING - No data analysis available for comparison, using placeholder evaluation
+2026-05-07 20:27:07,096 - SOCIA.WorkflowManager - INFO - Manual feedback mode enabled - prompting user for feedback
+2026-05-07 20:27:07,096 - SOCIA.FeedbackGenerationAgent - INFO - Generating feedback for improvement
+2026-05-07 20:27:07,096 - SOCIA.FeedbackGenerationAgent - INFO - No previous code available for diff generation
+2026-05-07 20:27:07,128 - SOCIA.LLMProvider - INFO - Overriding openai model from LLM_MODEL: gpt-5
+2026-05-07 20:28:51,781 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+2026-05-07 20:28:51,784 - SOCIA.LLMProvider - INFO - OpenAI API call recorded. Total API calls: 4
+2026-05-07 20:28:51,784 - SOCIA.FeedbackGenerationAgent - INFO - Lite mode feedback generation completed

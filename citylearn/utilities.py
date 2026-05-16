@@ -1,15 +1,13 @@
 import pickle
-from typing import Any, Iterable, Union
-import numpy as np
+from typing import Any
 import simplejson as json
 import yaml
-
 
 class FileHandler:
     @staticmethod
     def read_json(filepath: str, **kwargs) -> dict:
         """Return JSON document as dictionary.
-
+        
         Parameters
         ----------
         filepath : str
@@ -19,7 +17,7 @@ class FileHandler:
         ----------------
         **kwargs : dict
             Other infrequently used keyword arguments to be parsed to `simplejson.load`.
-
+        
         Returns
         -------
         dict
@@ -34,7 +32,7 @@ class FileHandler:
     @staticmethod
     def write_json(filepath: str, dictionary: dict, **kwargs):
         """Write dictionary to JSON file.
-
+        
         Parameters
         ----------
         filepath : str
@@ -49,19 +47,19 @@ class FileHandler:
         """
 
         kwargs = {'ignore_nan': True, 'sort_keys': False, 'default': str, 'indent': 2, **kwargs}
-
-        with open(filepath, 'w') as f:
+        
+        with open(filepath,'w') as f:
             json.dump(dictionary, f, **kwargs)
 
     @staticmethod
     def read_yaml(filepath: str) -> dict:
         """Return YAML document as dictionary.
-
+        
         Parameters
         ----------
         filepath : str
         pathname of YAML document.
-
+        
         Returns
         -------
         dict
@@ -75,8 +73,8 @@ class FileHandler:
 
     @staticmethod
     def write_yaml(filepath: str, dictionary: dict, **kwargs):
-        """Write dictionary to YAML file.
-
+        """Write dictionary to YAML file. 
+        
         Parameters
         ----------
         filepath : str
@@ -91,14 +89,14 @@ class FileHandler:
         """
 
         kwargs = {'sort_keys': False, 'indent': 2, **kwargs}
-
+        
         with open(filepath, 'w') as f:
             yaml.safe_dump(dictionary, f, **kwargs)
 
     @staticmethod
     def read_pickle(filepath: str, **kwargs) -> Any:
         """Return pickle file as some Python class object.
-
+        
         Parameters
         ----------
         filepath : str
@@ -108,7 +106,7 @@ class FileHandler:
         ----------------
         **kwargs : dict
             Other infrequently used keyword arguments to be parsed to `pickle.load`.
-
+        
         Returns
         -------
         Any
@@ -122,8 +120,8 @@ class FileHandler:
 
     @staticmethod
     def write_pickle(filepath: str, data: Any, **kwargs):
-        """Write Python object to pickle file.
-
+        """Write Python object to pickle file. 
+        
         Parameters
         ----------
         filepath : str
@@ -145,34 +143,3 @@ class FileHandler:
         url = '/'.join([a.strip('/') for a in args])
 
         return url
-
-
-class NoiseUtils:
-    @staticmethod
-    def generate_gaussian_noise(input_data: Union[np.ndarray, Iterable[float]], noise_std: float) -> np.ndarray:
-        """Generates Gaussian noise matching input shape.
-
-        Parameters
-        ----------
-        input_data : Union[np.ndarray, Iterable[float]]
-            Time series to add noise to.
-        noise_std : float
-            Noise standard deviation (ignored if <= 0)
-
-        Returns
-        -------
-            noise: np.ndarray
-                Zero-mean noise array with same shape as input
-        """
-
-        arr = np.asarray(input_data)  # Handles both ndarray and Iterable
-        if noise_std <= 0:
-            return np.zeros(arr.shape)
-        return np.random.normal(loc=0, scale=noise_std, size=arr.shape)
-
-    @staticmethod
-    def generate_scaled_noise(input_data: Union[np.ndarray, Iterable[float]], noise_std: float,
-                              scale: float = 1.0) -> np.ndarray:
-        """Generates pre-scaled noise (e.g., for percentage values)."""
-
-        return NoiseUtils.generate_gaussian_noise(input_data, noise_std) * scale

@@ -1,0 +1,44 @@
+{
+  "total_calls": 4,
+  "successful_calls": 4,
+  "failed_calls": 0,
+  "by_provider": {
+    "openai": 4
+  },
+  "by_endpoint": {
+    "responses": 4
+  },
+  "by_model": {
+    "gpt-5": 4
+  },
+  "events": [
+    {
+      "timestamp": "2026-05-07T20:22:06",
+      "provider": "openai",
+      "endpoint": "responses",
+      "model": "gpt-5",
+      "success": true
+    },
+    {
+      "timestamp": "2026-05-07T20:24:46",
+      "provider": "openai",
+      "endpoint": "responses",
+      "model": "gpt-5",
+      "success": true
+    },
+    {
+      "timestamp": "2026-05-07T20:26:07",
+      "provider": "openai",
+      "endpoint": "responses",
+      "model": "gpt-5",
+      "success": true
+    },
+    {
+      "timestamp": "2026-05-07T20:28:51",
+      "provider": "openai",
+      "endpoint": "responses",
+      "model": "gpt-5",
+      "success": true
+    }
+  ]
+}

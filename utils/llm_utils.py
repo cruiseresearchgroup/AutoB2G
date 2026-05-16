@@ -7,10 +7,11 @@ import json
 import logging
 from typing import Dict, Any, List, Union, Optional
 from pathlib import Path
+from utils.api_usage import record_api_call
 
 def load_api_key(key_name: str) -> Optional[str]:
     """
-    Load API key from keys.py file
+    Load API key from environment or keys.py file
     
     Args:
         key_name: Name of the API key, e.g., "OPENAI_API_KEY"
@@ -18,6 +19,10 @@ def load_api_key(key_name: str) -> Optional[str]:
     Returns:
         Optional[str]: The API key value, or None if not found
     """
+    env_value = os.environ.get(key_name)
+    if env_value:
+        return env_value
+
     try:
         # Import the keys module to access the hardcoded API key
         import keys
@@ -171,7 +176,13 @@ class OpenAIProvider(LLMProvider):
                             "max_output_tokens": 100000  # Larger output for reasoning models
                         })
                     
-                    resp = client.responses.create(**responses_kwargs)
+                    try:
+                        resp = client.responses.create(**responses_kwargs)
+                        usage = record_api_call("openai", "responses", model, True)
+                        self.logger.info(f"OpenAI API call recorded. Total API calls: {usage['total_calls']}")
+                    except Exception as api_err:
+                        record_api_call("openai", "responses", model, False, str(api_err))
+                        raise
                     return _extract_from_responses(resp)
                 else:
                     chat_kwargs = {
@@ -180,7 +191,13 @@ class OpenAIProvider(LLMProvider):
                         "temperature": temperature,
                         "max_tokens": effective_max,
                     }
-                    resp = client.chat.completions.create(**chat_kwargs)
+                    try:
+                        resp = client.chat.completions.create(**chat_kwargs)
+                        usage = record_api_call("openai", "chat.completions", model, True)
+                        self.logger.info(f"OpenAI API call recorded. Total API calls: {usage['total_calls']}")
+                    except Exception as api_err:
+                        record_api_call("openai", "chat.completions", model, False, str(api_err))
+                        raise
                     return resp.choices[0].message.content
             except Exception as call_err:
                 err_str = str(call_err)
@@ -203,7 +220,13 @@ class OpenAIProvider(LLMProvider):
                                 "max_output_tokens": 100000  # Larger output for reasoning models
                             })
                         
-                        resp = client.responses.create(**responses_kwargs)
+                        try:
+                            resp = client.responses.create(**responses_kwargs)
+                            usage = record_api_call("openai", "responses", model, True)
+                            self.logger.info(f"OpenAI API call recorded. Total API calls: {usage['total_calls']}")
+                        except Exception as api_err:
+                            record_api_call("openai", "responses", model, False, str(api_err))
+                            raise
                         return _extract_from_responses(resp)
                     except Exception as resp_err:
                         self.logger.error(f"OpenAI Responses API retry failed: {resp_err}")
@@ -281,7 +304,13 @@ class GeminiProvider(LLMProvider):
                                             generation_config=generation_config)
             
             # Call the API
-            response = model_instance.generate_content(prompt)
+            try:
+                response = model_instance.generate_content(prompt)
+                usage = record_api_call("gemini", "generate_content", model, True)
+                self.logger.info(f"Gemini API call recorded. Total API calls: {usage['total_calls']}")
+            except Exception as api_err:
+                record_api_call("gemini", "generate_content", model, False, str(api_err))
+                raise
             
             # Extract response text
             if hasattr(response, 'text'):
@@ -318,6 +347,8 @@ class AnthropicProvider(LLMProvider):
             The LLM's response
         """
         try:
+            from anthropic import Anthropic
+
             # Get API key from keys.py file
             api_key = load_api_key("ANTHROPIC_API_KEY")
             
@@ -328,11 +359,38 @@ class AnthropicProvider(LLMProvider):
             if not api_key:
                 self.logger.error("Anthropic API key not found in keys.py")
                 return "Error: Anthropic API key not found in keys.py"
-            
-            # Implementation for Anthropic API
-            # Currently just returns a placeholder message
-            self.logger.warning("Anthropic provider not yet fully implemented")
-            return "Error: Anthropic provider not yet fully implemented"
+
+            model = self.config.get("model", "claude-sonnet-4-20250514")
+            temperature = self.config.get("temperature", 0.7)
+            max_tokens = self.config.get("max_tokens", self.effective_max_tokens)
+            timeout = self.config.get("timeout", 180)
+
+            client = Anthropic(api_key=api_key, timeout=timeout)
+
+            try:
+                response = client.messages.create(
+                    model=model,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+                usage = record_api_call("anthropic", "messages", model, True)
+                self.logger.info(f"Anthropic API call recorded. Total API calls: {usage['total_calls']}")
+            except Exception as api_err:
+                record_api_call("anthropic", "messages", model, False, str(api_err))
+                raise
+
+            text_parts = []
+            for block in getattr(response, "content", []):
+                text = getattr(block, "text", None)
+                if text:
+                    text_parts.append(text)
+
+            if text_parts:
+                return "".join(text_parts)
+
+            self.logger.warning("Unexpected response format from Anthropic")
+            return str(response)
             
         except ImportError:
             self.logger.error("anthropic package not installed")
@@ -340,6 +398,74 @@ class AnthropicProvider(LLMProvider):
             
         except Exception as e:
             self.logger.error(f"Error calling Anthropic API: {e}")
+            return f"Error: {str(e)}"
+
+
+class NvidiaProvider(LLMProvider):
+    """
+    LLM provider using NVIDIA NIM chat completions.
+    """
+
+    def call(self, prompt: str, reasoning: Optional[Dict[str, Any]] = None) -> str:
+        """
+        Call NVIDIA's chat completions API with the provided prompt.
+
+        Args:
+            prompt: The prompt to send to the LLM
+            reasoning: Optional reasoning parameters (not used by NVIDIA)
+
+        Returns:
+            The LLM's response
+        """
+        try:
+            import requests
+
+            api_key = load_api_key("NVIDIA_API_KEY")
+            if not api_key:
+                api_key = self.config.get("api_key")
+
+            if not api_key:
+                self.logger.error("NVIDIA API key not found in keys.py")
+                return "Error: NVIDIA API key not found in keys.py"
+
+            model = self.config.get("model", "nvidia/llama-3.3-nemotron-super-49b-v1.5")
+            url = self.config.get("url", "https://integrate.api.nvidia.com/v1/chat/completions")
+            temperature = self.config.get("temperature", 0.6)
+            max_tokens = self.config.get("max_tokens", self.effective_max_tokens)
+            timeout = self.config.get("timeout", 180)
+
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": model,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            }
+
+            try:
+                response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+                if not response.ok:
+                    raise RuntimeError(
+                        f"NVIDIA API HTTP {response.status_code}: {response.text[:1000]}"
+                    )
+                usage = record_api_call("nvidia", "chat.completions", model, True)
+                self.logger.info(f"NVIDIA API call recorded. Total API calls: {usage['total_calls']}")
+            except Exception as api_err:
+                record_api_call("nvidia", "chat.completions", model, False, str(api_err))
+                raise
+
+            data = response.json()
+            return data["choices"][0]["message"]["content"]
+
+        except ImportError:
+            self.logger.error("requests package not installed")
+            return "Error: requests package not installed"
+
+        except Exception as e:
+            self.logger.error(f"Error calling NVIDIA API: {e}")
             return f"Error: {str(e)}"
 
 
@@ -413,7 +539,8 @@ def get_llm_provider(config: Dict[str, Any]) -> LLMProvider:
         An LLM provider instance
     """
     # Get the provider name from the config
-    provider_name = config.get("provider", "mock").lower()
+    provider_name = os.environ.get("LLM_PROVIDER") or config.get("provider", "mock")
+    provider_name = provider_name.lower()
     
     # Load the global config to get provider-specific settings
     try:
@@ -425,7 +552,7 @@ def get_llm_provider(config: Dict[str, Any]) -> LLMProvider:
         
         # Get provider-specific config if available
         if provider_name in providers_config:
-            provider_config = providers_config.get(provider_name, {})
+            provider_config = dict(providers_config.get(provider_name, {}))
             
             # Direct debugging of the actual model name coming from config
             if provider_name == "gemini":
@@ -433,6 +560,13 @@ def get_llm_provider(config: Dict[str, Any]) -> LLMProvider:
                 logging.getLogger("SOCIA.LLMProvider").info(f"Loading Gemini model from config: {model_name}")
         else:
             provider_config = {}
+
+        model_override = os.environ.get("LLM_MODEL")
+        if model_override:
+            provider_config["model"] = model_override
+            logging.getLogger("SOCIA.LLMProvider").info(
+                f"Overriding {provider_name} model from LLM_MODEL: {model_override}"
+            )
             
         # Create and return the appropriate provider
         if provider_name == "openai":
@@ -441,6 +575,8 @@ def get_llm_provider(config: Dict[str, Any]) -> LLMProvider:
             return GeminiProvider(provider_config)
         elif provider_name == "anthropic":
             return AnthropicProvider(provider_config)
+        elif provider_name == "nvidia":
+            return NvidiaProvider(provider_config)
         elif provider_name == "llama":
             return LlamaProvider(provider_config)
         else:
@@ -455,6 +591,8 @@ def get_llm_provider(config: Dict[str, Any]) -> LLMProvider:
             return GeminiProvider({})
         elif provider_name == "anthropic":
             return AnthropicProvider({})
+        elif provider_name == "nvidia":
+            return NvidiaProvider({})
         elif provider_name == "llama":
             return LlamaProvider({})
         else:

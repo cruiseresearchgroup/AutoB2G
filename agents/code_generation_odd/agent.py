@@ -285,7 +285,7 @@ class CodeGenerationAgent(BaseAgent):
         {json.dumps(model_plan, indent=2)}
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and must not be flagged.
         
         Perform a comprehensive code review checking for the following issues:
         
@@ -383,7 +383,7 @@ class CodeGenerationAgent(BaseAgent):
         ```
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and must not be flagged.
         
         Check if all critical issues, required code improvements, and prioritized actions from the feedback have been implemented in the code.
         
@@ -475,7 +475,7 @@ class CodeGenerationAgent(BaseAgent):
         {json.dumps(fixed_issues, indent=2)}
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and must not be flagged.
         
         Check if the code repeats any of the issues that were fixed previously. 
         Consider both the issue description and the fix log to understand what was fixed.
@@ -805,7 +805,7 @@ Temporal Holdout (STRICT):
         code_start = response.find("```")
         if code_start >= 0:
             code_start += len("```")
-            code_end = response.find("```")
+            code_end = response.find("```", code_start)
             if code_end >= 0:
                 extracted_code = response[code_start:code_end].strip()
                 return self._ensure_entry_point(extracted_code)
@@ -818,8 +818,9 @@ Temporal Holdout (STRICT):
         """
         Ensure the code has a proper entry point.
         
-        The entry point should be a main() function and a direct call to main(). This is
-        required for the code to run when executed directly or within the sandbox.
+        Normal Python entrypoints are valid, including `if __name__ == "__main__": main()`
+        and `if __name__ == "__main__": run()`. The sandbox can call main() or run()
+        when needed, so this method must not rewrite valid generated code.
         
         Args:
             code: The generated code
@@ -827,40 +828,6 @@ Temporal Holdout (STRICT):
         Returns:
             Code with entry point added if missing
         """
-        has_main = "def main(" in code
-        has_entry = "if __name__ == '__main__':" in code or "if __name__ == \"__main__\":" in code
-        
-        # Check for direct main call
-        direct_main_call = "main()" in code.splitlines()
-        
-        if not has_main:
-            self.logger.warning("Generated code lacks main() function; inserting stub.")
-            code = "def main():\n    pass\n\n" + code
-        
-        # Remove any if __name__ == "__main__" guard if present
-        if has_entry:
-            self.logger.warning("Generated code has __main__ guard; removing and inserting direct main call.")
-            code_lines = code.splitlines()
-            filtered_lines = []
-            skip_main_guard = False
-            for line in code_lines:
-                if "if __name__ == \"__main__\":" in line or "if __name__ == '__main__':" in line:
-                    skip_main_guard = True
-                    continue
-                if skip_main_guard and "main()" in line and line.strip().startswith("main()"):
-                    skip_main_guard = False
-                    continue
-                if skip_main_guard and not line.strip():
-                    continue
-                if skip_main_guard and line.startswith(" "):
-                    continue
-                filtered_lines.append(line)
-            code = "\n".join(filtered_lines)
-        
-        # Add direct main call if not present
-        if not direct_main_call or has_entry:
-            self.logger.warning("Generated code lacks direct main() call; inserting call at end of file.")
-            code += "\n\n# Execute main for both direct execution and sandbox wrapper invocation\nmain()"
         return code
     
     def _strip_markdown_fences(self, code: str) -> str:

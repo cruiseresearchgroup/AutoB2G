@@ -1,0 +1,13 @@
+{
+  "task_objective": "\nYou are given a runnable building-grid co-simulation framework based on the\ncurrent runnable CityLearn-grid script. It couples CityLearn building control\nwith a distribution grid model that can use either pandapower or OpenDSS.\n\nThe current workflow is:\nbuild_network -> create_citylearn_env -> build_building_bus_map ->\ncreate_citylearn_agent -> run_citylearn -> run_grid\n\nImportant modeling rules:\n- Building electricity demand must come from CityLearn as building_kw.\n- Buildings must be assigned to grid buses through build_building_bus_map.\n- Do not assume the same total building power is blindly replicated at every node.\n- The CityLearn schema must be PROJECT_ROOT/data/datasets/annex96_ce1_vt_neighborhood/schema.json.\n- Do not use citylearn/data/citylearn_challenge_2022_phase_1/schema.json or any CityLearn challenge dataset.\n- Prefer create_citylearn_env(dataset=None, ...) so the template default resolves the annex96 schema.\n- Grid analysis should use run_grid with building_kw, net, and building_bus_map.\n- Optional outputs are produced through evaluate_citylearn_kpis, evaluate_grid_kpis,\n  analyze_short_circuit, and analyze_n1 when requested.\n\nYour task is to write the full simulation code so that it matches the user's requirement.\n\nImportant constraints:\n- Use only necessary functions from the retrieved workflow code.\n- Preserve dependency order between CityLearn, grid mapping, and grid analysis.\n- Do not add extra explanatory text or comments to the code.\n\nSpecific User Requirement:\n\nRun a 25-building co-simulation using the default building-grid mapping.\nIdentify the nodes with the highest voltage sensitivity, redistribute the buildings to reduce voltage violations, rerun the simulation, and compare the grid KPIs before and after redistribution. Save all allocation configurations, voltage statistics, and comparison plots.\n",
+  "data_folder": "C:\\Users\\Ray\\PycharmProjects\\pythonProject\\AutoB2G - Copy\\Grid_data",
+  "data_files": [],
+  "evaluation_metrics": [
+    "citylearn_kpis",
+    "grid_kpis",
+    "voltage_profiles",
+    "line_loading",
+    "short_circuit",
+    "n1_resilience"
+  ]
+}

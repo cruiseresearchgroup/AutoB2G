@@ -4,6 +4,7 @@
 # todo: Add a Header to Generated Simulator Code
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -14,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from models.epidemic_model import create_epidemic_simulation
 from utils.llm_utils import load_api_key
+from utils.api_usage import reset_usage, usage_summary
 from dependency_injector.wiring import Provide, inject
 
 def setup_logging(output_path=None):
@@ -34,6 +36,11 @@ def setup_logging(output_path=None):
     
     # If output path is provided, add a file handler
     if output_path:
+        os.environ["OUTPUT_PATH"] = output_path
+        if not os.environ.get("API_USAGE_PATH"):
+            usage_path = os.path.join(output_path, "api_usage.json")
+            os.environ["API_USAGE_PATH"] = usage_path
+            reset_usage()
         try:
             # Ensure output directory exists
             os.makedirs(output_path, exist_ok=True)
@@ -219,9 +226,18 @@ def run_workflow(
     logger.info(f"Starting SOCIA in {args.mode.upper()} mode")
 
     try:
+        task_description = args.task
+        if args.task_file:
+            try:
+                with open(args.task_file, "r", encoding="utf-8") as f:
+                    task_data = json.load(f)
+                task_description = task_data.get("task_objective", task_description)
+            except Exception as exc:
+                logger.warning(f"Could not load task objective from task file: {exc}")
+
         # Initialize workflow manager with the container
         workflow_manager = WorkflowManager(
-            task_description=args.task,
+            task_description=task_description,
             data_path=args.task_file,
             output_path=args.output,
             config_path=args.config,
@@ -240,10 +256,12 @@ def run_workflow(
             logger.info(f"Workflow completed. Results available at: {result['code_path']}")
         else:
             logger.warning(f"Workflow ended but code file not found at: {result['code_path']}. Please check the logs and artifacts.")
+        logger.info(usage_summary())
         return 0
     
     except Exception as e:
         logger.error(f"An error occurred: {e}")
+        logger.info(usage_summary())
         return 1
 
 def main():

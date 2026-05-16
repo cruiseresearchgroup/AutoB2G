@@ -354,10 +354,15 @@ class DockerSandbox:
 # Try to identify and call the main function or simulation class
 entry_point_found = False
 
-# Option 1: Call main() function if it exists
-# Note: main() should be called directly at global scope in the code, not wrapped in if __name__ == "__main__"
+# Option 1: Call main() function if it exists.
+# Standard if __name__ == "__main__" guards are valid in generated code.
 if 'main' in code_namespace and callable(code_namespace['main']):
     code_namespace['main']()
+    entry_point_found = True
+
+# Option 1b: Call run() function if it exists
+elif 'run' in code_namespace and callable(code_namespace['run']):
+    code_namespace['run']()
     entry_point_found = True
 
 # Option 2: Create and run a Simulation if it exists

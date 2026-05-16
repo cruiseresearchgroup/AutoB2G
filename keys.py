@@ -6,4 +6,5 @@ File for storing API keys. Do not commit this file to version control.
 OPENAI_API_KEY = " "
 
 # Other potential API keys
-# ANTHROPIC_API_KEY = "your-anthropic-api-key-here"
+NVIDIA_API_KEY = " "
+ANTHROPIC_API_KEY = " "

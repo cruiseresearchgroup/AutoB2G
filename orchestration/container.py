@@ -19,6 +19,7 @@ from agents.simulation_execution.agent import SimulationExecutionAgent
 from agents.result_evaluation.agent import ResultEvaluationAgent
 from agents.feedback_generation.agent import FeedbackGenerationAgent
 from agents.iteration_control.agent import IterationControlAgent
+from agents.codebase_retrieval.agent import CodebaseRetrievalAgent
 
 class AgentContainer(containers.DeclarativeContainer):
     """
@@ -62,7 +63,8 @@ class AgentContainer(containers.DeclarativeContainer):
             "simulation_execution": {"prompt_template": "templates/simulation_execution_prompt.txt", "output_format": "json"},
             "result_evaluation": {"prompt_template": "templates/result_evaluation_prompt.txt", "output_format": "json"},
             "feedback_generation": {"prompt_template": "templates/feedback_generation_prompt.txt", "output_format": "json"},
-            "iteration_control": {"prompt_template": "templates/iteration_control_prompt.txt", "output_format": "json"}
+            "iteration_control": {"prompt_template": "templates/iteration_control_prompt.txt", "output_format": "json"},
+            "codebase_retrieval": {"output_format": "python"}
         }
         return defaults.get(agent_name, {})
 
@@ -130,6 +132,11 @@ class AgentContainer(containers.DeclarativeContainer):
         IterationControlAgent,
         config=config.agents.iteration_control
     )
+
+    codebase_retrieval_agent = providers.Factory(
+        CodebaseRetrievalAgent,
+        config=config.agents.codebase_retrieval
+    )
     
     # Agent provider dictionary for bulk access
     agent_providers = providers.Dict(
@@ -145,6 +152,7 @@ class AgentContainer(containers.DeclarativeContainer):
             "simulation_execution": simulation_execution_agent,
             "result_evaluation": result_evaluation_agent,
             "feedback_generation": feedback_generation_agent,
-            "iteration_control": iteration_control_agent
+            "iteration_control": iteration_control_agent,
+            "codebase_retrieval": codebase_retrieval_agent
         }
     ) 

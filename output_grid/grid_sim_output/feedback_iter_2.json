@@ -1,0 +1,38 @@
+{
+  "summary": "Script is largely correct but has critical runtime risks (empty bus mapping and unintended KPI overwrite) and an undefined entrypoint.",
+  "critical_issues": [
+    {
+      "issue": "Potential ZeroDivisionError when no available grid buses are found leading to modulo by zero during building->bus mapping.",
+      "location": "function build_building_bus_map \u2014 mapping creation: `available_buses[i % len(available_buses)]`",
+      "recommendation": "Check for empty available_buses and raise a clear error or handle the case before creating the mapping (e.g., raise ValueError with explanatory message)."
+    },
+    {
+      "issue": "Grid KPI CSV (grid_kpis.csv) may be overwritten when evaluating baseline and compensated runs because evaluate_grid_kpis(save=True) writes the same filename for both runs.",
+      "location": "run() where evaluate_grid_kpis is called for baseline and compensated simulations (save=True)",
+      "recommendation": "Do not use save=True inside evaluate_grid_kpis for per-case evaluations; call evaluate_grid_kpis(..., save=False) and write distinct filenames (e.g., grid_kpis_baseline.csv, grid_kpis_compensated.csv) from the run() logic to avoid overwriting."
+    },
+    {
+      "issue": "Undefined entrypoint: the script calls run() in the __main__ block but run() may not be defined causing a NameError at runtime.",
+      "location": "bottom of script: `if __name__ == \"__main__\": run()`",
+      "recommendation": "Either define the run() function implementing the main workflow or replace the __main__ block with an explicit error that explains the missing entrypoint, or call the correct existing entrypoint; prefer raising a clear RuntimeError if run() is absent."
+    }
+  ],
+  "code_patches": [
+    {
+      "target": "building_bus_map = {\n        i: available_buses[i % len(available_buses)]\n        for i in range(len(env.unwrapped.buildings))\n    }",
+      "replacement": "if len(available_buses) == 0:\n        raise ValueError(f\"No available grid buses to map buildings (slack_bus={slack_bus}).\")\n    building_bus_map = {\n        i: available_buses[i % len(available_buses)]\n        for i in range(len(env.unwrapped.buildings))\n    }"
+    },
+    {
+      "target": "kpis_base = evaluate_grid_kpis(baseline_results, save=True)",
+      "replacement": "kpis_base = evaluate_grid_kpis(baseline_results, save=False)"
+    },
+    {
+      "target": "kpis_comp = evaluate_grid_kpis(compensated_results, save=True)",
+      "replacement": "kpis_comp = evaluate_grid_kpis(compensated_results, save=False)"
+    },
+    {
+      "target": "if __name__ == \"__main__\":\n    run()",
+      "replacement": "if __name__ == \"__main__\":\n    raise RuntimeError(\"Entry point 'run()' is not defined; define a main simulation function or call the workflow entrypoint.\")"
+    }
+  ]
+}

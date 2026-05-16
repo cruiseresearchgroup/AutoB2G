@@ -9,7 +9,7 @@ Current Code:
 {code_content}
 
 SPECIAL REQUIREMENTS:
-- At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+- A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and should NOT be considered an issue.
 
 Instructions:
 1. For each open issue in the historical log, carefully analyze the current code to determine if the issue has been fixed.

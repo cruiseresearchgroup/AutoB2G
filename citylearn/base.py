@@ -3,7 +3,6 @@ from typing import Any, List, Mapping, Tuple, Union
 import uuid
 import numpy as np
 
-
 class EpisodeTracker:
     """Class for keeping track of current episode time steps for reading observations from data files.
 
@@ -23,7 +22,7 @@ class EpisodeTracker:
     simulation_end_time_step: int
         Time step to end reading from data files.
     """
-
+    
     def __init__(self, simulation_start_time_step: int, simulation_end_time_step: int):
         self.__episode = None
         self.__episode_start_time_step = None
@@ -37,55 +36,54 @@ class EpisodeTracker:
         """Current episode index"""
 
         return self.__episode
-
+    
     @property
     def episode_time_steps(self):
         """Number of time steps in current episode split."""
 
         return (self.episode_end_time_step - self.episode_start_time_step) + 1
-
+    
     @property
     def simulation_time_steps(self):
         """Number of time steps between `simulation_start_time_step` and `simulation_end_time_step`."""
 
         return (self.__simulation_end_time_step - self.__simulation_start_time_step) + 1
-
+    
     @property
     def simulation_start_time_step(self):
         """Time step to start reading from data files."""
 
         return self.__simulation_start_time_step
-
+    
     @property
     def simulation_end_time_step(self):
         """Time step to end reading from data files."""
 
         return self.__simulation_end_time_step
-
+    
     @property
     def episode_start_time_step(self):
         """Start time step in current episode split."""
 
         return self.__episode_start_time_step
-
+    
     @property
     def episode_end_time_step(self):
         """End time step in current episode split."""
 
         return self.__episode_end_time_step
 
-    def next_episode(self, episode_time_steps: Union[int, List[Tuple[int, int]]], rolling_episode_split: bool,
-                     random_episode_split: bool, random_seed: int):
+    def next_episode(self, episode_time_steps: Union[int, List[Tuple[int, int]]], rolling_episode_split: bool, random_episode_split: bool, random_seed: int):
         """Advance to next episode and set `episode_start_time_step` and `episode_end_time_step` for reading data files.
-
+        
         Parameters
         ----------
         episode_time_steps: Union[int, List[Tuple[int, int]]], optional
-            If type is `int`, it is the number of time steps in an episode. If type is `List[Tuple[int, int]]]` is provided, it is a list of
-            episode start and end time steps between `simulation_start_time_step` and `simulation_end_time_step`. Defaults to (`simulation_end_time_step`
+            If type is `int`, it is the number of time steps in an episode. If type is `List[Tuple[int, int]]]` is provided, it is a list of 
+            episode start and end time steps between `simulation_start_time_step` and `simulation_end_time_step`. Defaults to (`simulation_end_time_step` 
         - `simulation_start_time_step`) + 1. Will ignore `rolling_episode_split` if `episode_splits` is of type `List[Tuple[int, int]]]`.
         rolling_episode_split: bool, default: False
-            True if episode sequences are split such that each time step is a candidate for `episode_start_time_step` otherwise, False to split episodes
+            True if episode sequences are split such that each time step is a candidate for `episode_start_time_step` otherwise, False to split episodes 
             in steps of `episode_time_steps`.
         random_episode_split: bool, default: False
             True if episode splits are to be selected at random during training otherwise, False to select sequentially.
@@ -98,9 +96,8 @@ class EpisodeTracker:
             random_episode_split,
             random_seed,
         )
-
-    def __next_episode_time_steps(self, episode_time_steps: Union[int, List[Tuple[int, int]]],
-                                  rolling_episode_split: bool, random_episode_split: bool, random_seed: int):
+        
+    def __next_episode_time_steps(self, episode_time_steps: Union[int, List[Tuple[int, int]]], rolling_episode_split: bool, random_episode_split: bool, random_seed: int):
         """Sets `episode_start_time_step` and `episode_end_time_step` for reading data files."""
 
         splits = None
@@ -109,9 +106,9 @@ class EpisodeTracker:
             splits = episode_time_steps
 
         else:
-            earliest_start_time_step = self.__simulation_start_time_step
+            earliest_start_time_step = self.__simulation_start_time_step 
             latest_start_time_step = (self.__simulation_end_time_step + 1) - episode_time_steps
-
+            
             if rolling_episode_split:
                 start_time_steps = range(earliest_start_time_step, latest_start_time_step + 1)
             else:
@@ -122,12 +119,12 @@ class EpisodeTracker:
             splits = splits.tolist()
 
         if random_episode_split:
-            seed = int(random_seed * (self.episode + 1))
+            seed = int(random_seed*(self.episode + 1))
             nprs = np.random.RandomState(seed)
             ix = nprs.choice(len(splits) - 1)
 
         else:
-            ix = self.episode % len(splits)
+            ix = self.episode%len(splits)
 
         self.__episode_start_time_step, self.__episode_end_time_step = splits[ix]
 
@@ -135,7 +132,6 @@ class EpisodeTracker:
         """Resets episode index to -1 before any simulation."""
 
         self.__episode = -1
-
 
 class Environment:
     """Base class for all `citylearn` classes that have a spatio-temporal dimension.
@@ -156,9 +152,8 @@ class Environment:
 
     DEFAULT_SECONDS_PER_TIME_STEP = 3600.0
     DEFAULT_RANDOM_SEED_RANGE = (0, 100_000_000)
-
-    def __init__(self, seconds_per_time_step: float = None, random_seed: int = None,
-                 episode_tracker: EpisodeTracker = None, time_step_ratio: int = None):
+    
+    def __init__(self, seconds_per_time_step: float = None, random_seed: int = None, episode_tracker: EpisodeTracker = None, time_step_ratio: int = None):
         self.seconds_per_time_step = seconds_per_time_step
         self.__uid = uuid.uuid4().hex
         self.random_seed = random_seed
@@ -171,23 +166,23 @@ class Environment:
         r"""Unique environment ID."""
 
         return self.__uid
-
+    
     @property
     def random_seed(self) -> int:
         """Pseudorandom number generator seed for repeatable results."""
 
         return self.__random_seed
-
+    
     @property
     def episode_tracker(self) -> EpisodeTracker:
-        """:py:class:`citylearn.base.EpisodeTracker` object used to keep track of
+        """:py:class:`citylearn.base.EpisodeTracker` object used to keep track of 
         current episode time steps for reading observations from data files."""
 
         return self.__episode_tracker
-
+    
     @property
     def time_step_ratio(self) -> int:
-        """:py:class:`citylearn.base.EpisodeTracker` object used to keep track of
+        """:py:class:`citylearn.base.EpisodeTracker` object used to keep track of 
         current episode time steps for reading observations from data files."""
 
         return self.__time_step_ratio
@@ -203,13 +198,13 @@ class Environment:
         r"""Number of seconds in 1 time step."""
 
         return self.__seconds_per_time_step
-
+    
     @property
     def numpy_random_state(self) -> np.random.RandomState:
         """Nupy random state object."""
 
         return np.random.RandomState(self.random_seed)
-
+    
     @random_seed.setter
     def random_seed(self, random_seed: int):
         random_seed = random.randint(*self.DEFAULT_RANDOM_SEED_RANGE) if random_seed is None else random_seed
@@ -226,14 +221,14 @@ class Environment:
     @episode_tracker.setter
     def episode_tracker(self, episode_tracker: EpisodeTracker):
         self.__episode_tracker = episode_tracker
-
+    
     @time_step_ratio.setter
     def time_step_ratio(self, time_step_ratio: int):
         self.__time_step_ratio = time_step_ratio
 
     @time_step.setter
     def time_step(self, time_step: int):
-        self.__time_step = time_step
+        self.__time_step = time_step    
 
     def get_metadata(self) -> Mapping[str, Any]:
         """Returns general static information."""

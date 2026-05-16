@@ -38,7 +38,7 @@ class BaseAgent(ABC):
                 self.logger.error(f"Error calling config function: {e}")
                 self.config = {}
         else:
-            self.config = config
+            self.config = config or {}
 
         self.prompt_template = self._load_prompt_template()
         

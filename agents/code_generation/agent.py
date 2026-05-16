@@ -53,7 +53,7 @@ class CodeGenerationAgent(BaseAgent):
             Dictionary containing the generated code and metadata
         """
         self.logger.info("Generating simulation code")
-        
+
         # Log blueprint usage if available
         if blueprint is not None:
             self.logger.info("Using blueprint for code generation in blueprint mode")
@@ -310,18 +310,18 @@ class CodeGenerationAgent(BaseAgent):
         {json.dumps(model_plan, indent=2)}
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and should NOT be considered an issue.
         
         Perform a comprehensive code review checking for the following issues:
         
         1. SYNTAX ERRORS: Any syntax errors or code that might cause runtime errors
         2. PLACEHOLDERS: Placeholder functions or methods (containing only 'pass' without implementation)
-        3. MISSING IMPLEMENTATIONS: Required methods or functionality mentioned in the model plan but not implemented
-        4. INCONSISTENCIES: Inconsistencies between class/method names in the model plan and the implementation
+        3. MISSING IMPLEMENTATIONS: Required retrieved workflow functions/classes that are absent or have empty bodies
+        4. INCONSISTENCIES: Inconsistencies between retrieved function names, call arguments, and dependency order
         5. UNDEFINED REFERENCES: References to undefined variables, methods, or classes
         6. ERROR HANDLING: Missing or inadequate error handling, especially for file operations and data processing
-        7. COMPLETENESS: Check that all components from the model plan (entities, behaviors, interactions) are implemented
-        8. DOCUMENTATION: Missing or incomplete docstrings for classes and methods
+        7. COMPLETENESS: Check that the required retrieved workflow functions/classes are present
+        8. DOCUMENTATION: Ignore missing docstrings unless they cause syntax errors
         9. TYPE ANNOTATIONS: Missing or incorrect type annotations
         10. ALGORITHM EFFICIENCY: Inefficient algorithms or code patterns
         
@@ -407,7 +407,7 @@ class CodeGenerationAgent(BaseAgent):
         ```
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and should NOT be considered an issue.
         
         Check if all critical issues, required code improvements, and prioritized actions from the feedback have been implemented in the code.
         
@@ -498,7 +498,7 @@ class CodeGenerationAgent(BaseAgent):
         {json.dumps(fixed_issues, indent=2)}
         
         SPECIAL REQUIREMENTS:
-        - At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution. This is a STANDARD REQUIREMENT for all simulations in this system and should NOT be considered an issue.
+        - A normal Python entrypoint such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()` is valid and should NOT be considered an issue.
         
         Check if the code repeats any of the issues that were fixed previously. 
         Consider both the issue description and the fix log to understand what was fixed.
@@ -804,7 +804,7 @@ class CodeGenerationAgent(BaseAgent):
             )
         
         return prompt
-    
+
     def _extract_code(self, response: str) -> str:
         """
         Extract code from the LLM response.
@@ -822,7 +822,7 @@ class CodeGenerationAgent(BaseAgent):
         code_start = response.find("```")
         if code_start >= 0:
             code_start += len("```")
-            code_end = response.find("```")
+            code_end = response.find("```", code_start)
             if code_end >= 0:
                 extracted_code = response[code_start:code_end].strip()
                 return self._ensure_entry_point(extracted_code)
@@ -833,10 +833,11 @@ class CodeGenerationAgent(BaseAgent):
     
     def _ensure_entry_point(self, code: str) -> str:
         """
-        Ensure the code has a proper entry point.
-        
-        The entry point should be a main() function and a direct call to main(). This is
-        required for the code to run when executed directly or within the sandbox.
+        Preserve the generated code's entry point.
+
+        Earlier versions forced every generated script to use an unconditional
+        global main() call. That is unsafe for retrieved code because it rewrites
+        normal Python entrypoints and can add stubs that were never requested.
         
         Args:
             code: The generated code
@@ -844,40 +845,6 @@ class CodeGenerationAgent(BaseAgent):
         Returns:
             Code with entry point added if missing
         """
-        has_main = "def main(" in code
-        has_entry = "if __name__ == '__main__':" in code or "if __name__ == \"__main__\":" in code
-        
-        # Check for direct main call
-        direct_main_call = "main()" in code.splitlines()
-        
-        if not has_main:
-            self.logger.warning("Generated code lacks main() function; inserting stub.")
-            code = "def main():\n    pass\n\n" + code
-        
-        # Remove any if __name__ == "__main__" guard if present
-        if has_entry:
-            self.logger.warning("Generated code has __main__ guard; removing and inserting direct main call.")
-            code_lines = code.splitlines()
-            filtered_lines = []
-            skip_main_guard = False
-            for line in code_lines:
-                if "if __name__ == \"__main__\":" in line or "if __name__ == '__main__':" in line:
-                    skip_main_guard = True
-                    continue
-                if skip_main_guard and "main()" in line and line.strip().startswith("main()"):
-                    skip_main_guard = False
-                    continue
-                if skip_main_guard and not line.strip():
-                    continue
-                if skip_main_guard and line.startswith(" "):
-                    continue
-                filtered_lines.append(line)
-            code = "\n".join(filtered_lines)
-        
-        # Add direct main call if not present
-        if not direct_main_call or has_entry:
-            self.logger.warning("Generated code lacks direct main() call; inserting call at end of file.")
-            code += "\n\n# Execute main for both direct execution and sandbox wrapper invocation\nmain()"
         return code
     
     def _strip_markdown_fences(self, code: str) -> str:

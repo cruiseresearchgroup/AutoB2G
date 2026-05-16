@@ -23,6 +23,8 @@ Previous iteration code (if available):
 Task Specification (REFERENCE ONLY):
 {task_spec}
 
+If Task Specification contains `retrieved_workflow_code`, treat it as the primary implementation source. Generate the final simulation by adapting that retrieved workflow code to the user's task, and do not replace it with a generic simulation scaffold unless the retrieved code is unusable.
+
 Model Plan (REFERENCE ONLY):
 {model_plan}
 
@@ -115,4 +117,4 @@ Please generate a complete implementation that includes:
 - Visualization functions for displaying results (e.g., `visualize()`)
 - Methods for saving simulation results to a file (e.g., `save_results(filename)`) and a demonstration in `main()` showing how to call `save_results("results.csv")` to persist the results.
 - A main function that demonstrates how to initialize, run, visualize, and save the simulation
-- At the end of the file, include a direct call to the main() function (e.g., `# Execute main for both direct execution and sandbox wrapper invocation\nmain()`) instead of using the traditional `if __name__ == "__main__"` guard to ensure compatibility with sandbox execution
+- Include a normal executable Python entrypoint, such as `if __name__ == "__main__": main()` or `if __name__ == "__main__": run()`. Do not add an unconditional global `main()` call solely for sandbox compatibility.
